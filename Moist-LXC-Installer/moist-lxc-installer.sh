@@ -213,6 +213,12 @@ echo -e "${GREEN}[+] User $USERNAME created with sudo access (password required)
 
 echo -e "${BLUE}[>] Setting up Discord Bot ... ${RESET}"
 
+
+read -s -p "Enter Discord bot token (hidden): " BOT_TOKEN
+echo
+
+read -p "Enter Discord Guild/Server ID: " GUILD_ID
+
 # Hardcoded Discord bot repo
 BOT_REPO="https://github.com/moistmediaarchive/Moist-Bot.git"
 
