@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
 
-SCRIPT_VERSION="0.0.12"
+SCRIPT_VERSION="0.0.13"
+DOC_LINK="https://github.com/moistmediaarchive/moist-lxc-installer/blob/main/readme.md"
 
 GREEN="\033[32m"
 RED="\033[31m"
@@ -33,8 +34,8 @@ print_banner() {
     echo -e "/_/  /_/\\____/___//____//_/     /_/  |_\\____/   ${RESET}"
     echo
     echo
-    echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
-    echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>${RESET}"
+    echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - v$SCRIPT_VERSION"
+    echo -e "${YELLOW}Read the documentation if you need help: $DOC_LINK ${RESET}"
     echo
     echo
 }
@@ -365,11 +366,14 @@ pct exec $CTID -- bash -c "
         # copy the tarball into the track folder
         cp /home/$USERNAME/assetto-servers/\$ASSETTOSERVER_FILE \"\$track_dir/\" || continue
 
-        # extract it as the correct user (pass the literal filename)
-        runuser -l $USERNAME -c \"cd '$track_dir' && tar --no-same-owner -xzf assetto-server-linux-x64.tar.gz\" || {
+        # try to extract as the correct user
+        if ! runuser -u $USERNAME -- bash -c \"cd \\\"\$track_dir\\\" && tar --no-same-owner -xzf assetto-server-linux-x64.tar.gz\"; then
             echo '[!] Failed to extract AssettoServer in' \"\$track_dir\"
+            echo '--- Debug Info ---'
+            runuser -u $USERNAME -- bash -c \"cd \\\"\$track_dir\\\" && pwd && ls -l\"
+            echo '------------------'
             continue
-        }
+        fi
 
         # clean up tarball
         rm -f \"\$track_dir/assetto-server-linux-x64.tar.gz\"
