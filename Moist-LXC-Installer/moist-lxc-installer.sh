@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-SCRIPT_VERSION="0.0.15"
+SCRIPT_VERSION="0.0.16"
 DOC_LINK="https://github.com/moistmediaarchive/moist-lxc-installer/blob/main/readme.md"
 
 GREEN="\033[32m"
@@ -396,38 +396,33 @@ echo
 
 echo -e "${GREEN}[+] AssettoServer deployed and permissions set in each track folder.${RESET}"
 
-echo -e "${BLUE}[>] Running initial setup for each track server - this may take some time if you have many tracks...${RESET}"
+echo -e "${BLUE}[>] Running initial setup for each track server - this may take some time if you have many tracks${RESET}"
 
 pct exec $CTID -- bash -c "
     for track_dir in /home/$USERNAME/assetto-servers/*/; do
         [ -d \"\$track_dir\" ] || continue
         if [ -f \"\$track_dir/AssettoServer\" ]; then
-            echo -e '${BLUE}[>] Starting initial setup for:${RESET}' \$(basename \"\$track_dir\")
+            echo -e '${BLUE}[>] Starting initial setup for: ${RESET}' \$(basename \"\$track_dir\")
             cd \"\$track_dir\"
-
-            # Run server once as user (non-login shell so cd sticks)
-            runuser -u $USERNAME -- bash -c \"cd \\\"\$track_dir\\\" && ./AssettoServer --once\" &
-            SERVER_PID=\$!
-
-            # Wait until cfg/extra_cfg.yml appears or timeout
-            for i in {1..30}; do
-                if [ -f \"\$track_dir/cfg/extra_cfg.yml\" ]; then
-                    break
-                fi
-                sleep 2
-            done
-
-            # Kill if still running
+            runuser -l $USERNAME -c \"bash -c './AssettoServer > /dev/null 2>&1 & echo \$!'\" > /tmp/server_pid
+            SERVER_PID=\$(cat /tmp/server_pid)
+            sleep 10
             kill \$SERVER_PID >/dev/null 2>&1 || true
-            wait \$SERVER_PID 2>/dev/null || true
-
-            echo -e '${GREEN}[+] Initial setup complete for:${RESET}' \$(basename \"\$track_dir\")
-        else
-            echo \"[!] AssettoServer binary missing in \$track_dir\"
-            ls -l \"\$track_dir\"
+            rm -f /tmp/server_pid
+            echo -e '${GREEN}[+] Initial setup complete for: ${RESET}' \$(basename \"\$track_dir\")
         fi
     done
 "
+
+pct exec $CTID -- bash -c "
+    for track_dir in /home/$USERNAME/assetto-servers/*/; do
+        [ -d \"\$track_dir/cfg\" ] || continue
+        chown -R $USERNAME:$USERNAME \"\$track_dir/cfg\"
+        chmod -R u+rw \"\$track_dir/cfg\"
+    done
+"
+
+echo -e "${GREEN}[+] All track servers have completed their initial setup.${RESET}"
 
 sleep 1.5
 
