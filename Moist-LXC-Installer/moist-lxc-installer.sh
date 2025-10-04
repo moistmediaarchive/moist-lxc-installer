@@ -35,7 +35,7 @@ print_banner() {
     echo
     echo
     echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - v$SCRIPT_VERSION"
-    echo -e "${YELLOW}Read the documentation if you need help: $DOC_LINK ${RESET}"
+    echo -e "${YELLOW}Read the documentation if you need help:${RESET} $DOC_LINK"
     echo
     echo
 }
@@ -316,6 +316,7 @@ echo
 echo "https://github.com/compujuckel/AssettoServer/releases/tag/v0.0.54"
 echo 
 
+
 MAX_ATTEMPTS=3
 attempt=1
 while [ $attempt -le $MAX_ATTEMPTS ]; do
@@ -359,35 +360,16 @@ echo -e "${GREEN}[+] AssettoServer release downloaded.${RESET}"
 echo -e "${BLUE}[>] Copying and extracting AssettoServer into each track folder...${RESET}"
 
 pct exec $CTID -- bash -c "
-    ASSETTOSERVER_FILE='assetto-server-linux-x64.tar.gz'
     for track_dir in /home/$USERNAME/assetto-servers/*/; do
         [ -d \"\$track_dir\" ] || continue
-
-        # copy the tarball into the track folder
-        cp /home/$USERNAME/assetto-servers/\$ASSETTOSERVER_FILE \"\$track_dir/\" || continue
-
-        # try to extract as the correct user
-        if ! runuser -u $USERNAME -- bash -c \"cd \\\"\$track_dir\\\" && tar --no-same-owner -xzf assetto-server-linux-x64.tar.gz\"; then
-            echo '[!] Failed to extract AssettoServer in' \"\$track_dir\"
-            echo '--- Debug Info ---'
-            runuser -u $USERNAME -- bash -c \"cd \\\"\$track_dir\\\" && pwd && ls -l\"
-            echo '------------------'
-            continue
-        fi
-
-        # clean up tarball
-        rm -f \"\$track_dir/assetto-server-linux-x64.tar.gz\"
-
-        # make sure binary is executable
+        cp /home/$USERNAME/assetto-servers/$ASSETTOSERVER_FILE \"\$track_dir\"
+        cd \"\$track_dir\"
+        sudo tar --no-same-owner -xzf $ASSETTOSERVER_FILE
+        rm -f $ASSETTOSERVER_FILE
+        # make sure the binary is executable
         if [ -f \"\$track_dir/AssettoServer\" ]; then
             chmod +x \"\$track_dir/AssettoServer\"
-        else
-            echo \"[!] AssettoServer binary missing in \$track_dir\"
         fi
-
-        # fix ownership/permissions
-        chown -R $USERNAME:$USERNAME \"\$track_dir\"
-        chmod -R u+rw \"\$track_dir\"
     done
 "
 
