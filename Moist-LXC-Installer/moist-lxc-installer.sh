@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+SCRIPT_VERSION="0.0.10"
+
 GREEN="\033[32m"
 RED="\033[31m"
 YELLOW="\033[33m"
@@ -30,7 +32,7 @@ echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
 echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
 echo
 echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version 1.10"
+echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
 echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
 echo
 echo
@@ -132,7 +134,7 @@ echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
 echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
 echo
 echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version 1.10"
+echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
 echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
 echo
 echo
@@ -204,7 +206,7 @@ echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
 echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
 echo
 echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version 1.10"
+echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
 echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
 echo
 echo
@@ -299,7 +301,7 @@ echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
 echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
 echo
 echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version 1.10"
+echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
 echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
 echo
 echo
@@ -428,7 +430,7 @@ echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
 echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
 echo
 echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version 1.10"
+echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
 echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
 echo
 echo
@@ -474,7 +476,7 @@ echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
 echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
 echo
 echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version 1.10"
+echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version SCRIPT_VERSION"
 echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
 echo
 echo
