@@ -23,19 +23,22 @@ spinner() {
     printf "    \b\b\b\b"
 }
 
-clear
-echo -e "${YELLOW}"
-echo -e "    __  _______  _______________    ___   ______"
-echo -e "   /  |/  / __ \/  _/ ___/_  __/   /   | / ____/"
-echo -e "  / /|_/ / / / // / \__ \ / /_____/ /| |/ /     "
-echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
-echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
-echo
-echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
-echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
-echo
-echo
+print_banner() {
+    clear
+    echo -e "${YELLOW}"
+    echo -e "    __  _______  _______________    ___   ______"
+    echo -e "   /  |/  / __ \\/  _/ ___/_  __/   /   | / ____/"
+    echo -e "  / /|_/ / / / // / \\__ \\ / /_____/ /| |/ /     "
+    echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
+    echo -e "/_/  /_/\\____/___//____//_/     /_/  |_\\____/   ${RESET}"
+    echo
+    echo
+    echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
+    echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>${RESET}"
+    echo
+    echo
+}
+print_banner
 echo -e "${GREEN}[+] Welcome to the Assetto Corsa server setup wizard.${RESET}"
 
 # --- LXC Set Up ---
@@ -125,19 +128,7 @@ echo -e "${GREEN}[+] Dependencies installed.${RESET}"
 
 sleep 1.5
 
-clear
-echo -e "${YELLOW}"
-echo -e "    __  _______  _______________    ___   ______"
-echo -e "   /  |/  / __ \/  _/ ___/_  __/   /   | / ____/"
-echo -e "  / /|_/ / / / // / \__ \ / /_____/ /| |/ /     "
-echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
-echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
-echo
-echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
-echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
-echo
-echo
+print_banner
 
 echo -e "${GREEN}[+] Dependencies installed.${RESET}"
 
@@ -197,19 +188,7 @@ echo -e "${GREEN}[+] User $USERNAME created with sudo access (password required)
 
 sleep 1.5
 
-clear
-echo -e "${YELLOW}"
-echo -e "    __  _______  _______________    ___   ______"
-echo -e "   /  |/  / __ \/  _/ ___/_  __/   /   | / ____/"
-echo -e "  / /|_/ / / / // / \__ \ / /_____/ /| |/ /     "
-echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
-echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
-echo
-echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
-echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
-echo
-echo
+print_banner
 
 echo -e "${GREEN}[+] User $USERNAME created with sudo access (password required).${RESET}"
 
@@ -292,19 +271,7 @@ echo
 
 sleep 1.5
 
-clear
-echo -e "${YELLOW}"
-echo -e "    __  _______  _______________    ___   ______"
-echo -e "   /  |/  / __ \/  _/ ___/_  __/   /   | / ____/"
-echo -e "  / /|_/ / / / // / \__ \ / /_____/ /| |/ /     "
-echo -e " / /  / / /_/ // / ___/ // /_____/ ___ / /___   "
-echo -e "/_/  /_/\____/___//____//_/     /_/  |_\____/   ${RESET}"
-echo
-echo
-echo -e "${YELLOW}Moist AC Server and Discord Bot Auto Setup${RESET} - version $SCRIPT_VERSION"
-echo -e "${YELLOW}Read the documentation if you need help: <link placeholder>"
-echo
-echo
+print_banner
 
 echo -e "${GREEN}[+] Discord bot running and online.${RESET}"
 echo
@@ -395,20 +362,26 @@ pct exec $CTID -- bash -c "
     for track_dir in /home/$USERNAME/assetto-servers/*/; do
         [ -d \"\$track_dir\" ] || continue
 
-        cp /home/$USERNAME/assetto-servers/\$ASSETTOSERVER_FILE \"\$track_dir\"
+        # copy the tarball into the track folder
+        cp /home/$USERNAME/assetto-servers/\$ASSETTOSERVER_FILE \"\$track_dir/\" || continue
 
-        # Extract as the correct user in the track dir
-        runuser -l $USERNAME -c \"cd '\$track_dir' && tar --no-same-owner -xzf '\$ASSETTOSERVER_FILE'\" || {
+        # extract it as the correct user
+        runuser -l $USERNAME -c \"cd '$track_dir' && tar --no-same-owner -xzf '\$ASSETTOSERVER_FILE'\" || {
             echo '[!] Failed to extract AssettoServer in' \"\$track_dir\"
             continue
         }
 
+        # clean up tarball
         rm -f \"\$track_dir/\$ASSETTOSERVER_FILE\"
 
+        # make sure binary is executable
         if [ -f \"\$track_dir/AssettoServer\" ]; then
             chmod +x \"\$track_dir/AssettoServer\"
+        else
+            echo \"[!] AssettoServer binary missing in \$track_dir\"
         fi
 
+        # fix ownership/permissions
         chown -R $USERNAME:$USERNAME \"\$track_dir\"
         chmod -R u+rw \"\$track_dir\"
     done
