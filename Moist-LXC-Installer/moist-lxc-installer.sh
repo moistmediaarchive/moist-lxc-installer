@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-SCRIPT_VERSION="0.0.14"
+SCRIPT_VERSION="0.0.15"
 DOC_LINK="https://github.com/moistmediaarchive/moist-lxc-installer/blob/main/readme.md"
 
 GREEN="\033[32m"
@@ -405,7 +405,8 @@ pct exec $CTID -- bash -c "
             echo -e '${BLUE}[>] Starting initial setup for:${RESET}' \$(basename \"\$track_dir\")
             cd \"\$track_dir\"
 
-            runuser -l $USERNAME -c \"cd '$track_dir' && ./AssettoServer --once\" &
+            # Run server once as user (non-login shell so cd sticks)
+            runuser -u $USERNAME -- bash -c \"cd \\\"\$track_dir\\\" && ./AssettoServer --once\" &
             SERVER_PID=\$!
 
             # Wait until cfg/extra_cfg.yml appears or timeout
@@ -416,10 +417,14 @@ pct exec $CTID -- bash -c "
                 sleep 2
             done
 
+            # Kill if still running
             kill \$SERVER_PID >/dev/null 2>&1 || true
             wait \$SERVER_PID 2>/dev/null || true
 
             echo -e '${GREEN}[+] Initial setup complete for:${RESET}' \$(basename \"\$track_dir\")
+        else
+            echo \"[!] AssettoServer binary missing in \$track_dir\"
+            ls -l \"\$track_dir\"
         fi
     done
 "
