@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-SCRIPT_VERSION="0.0.13"
+SCRIPT_VERSION="0.0.14"
 DOC_LINK="https://github.com/moistmediaarchive/moist-lxc-installer/blob/main/readme.md"
 
 GREEN="\033[32m"
