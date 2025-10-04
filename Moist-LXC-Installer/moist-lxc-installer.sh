@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-SCRIPT_VERSION="0.0.10"
+SCRIPT_VERSION="0.0.11"
 
 GREEN="\033[32m"
 RED="\033[31m"
