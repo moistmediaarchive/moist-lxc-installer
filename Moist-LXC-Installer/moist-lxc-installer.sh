@@ -365,14 +365,14 @@ pct exec $CTID -- bash -c "
         # copy the tarball into the track folder
         cp /home/$USERNAME/assetto-servers/\$ASSETTOSERVER_FILE \"\$track_dir/\" || continue
 
-        # extract it as the correct user
-        runuser -l $USERNAME -c \"cd '$track_dir' && tar --no-same-owner -xzf '\$ASSETTOSERVER_FILE'\" || {
+        # extract it as the correct user (pass the literal filename)
+        runuser -l $USERNAME -c \"cd '$track_dir' && tar --no-same-owner -xzf assetto-server-linux-x64.tar.gz\" || {
             echo '[!] Failed to extract AssettoServer in' \"\$track_dir\"
             continue
         }
 
         # clean up tarball
-        rm -f \"\$track_dir/\$ASSETTOSERVER_FILE\"
+        rm -f \"\$track_dir/assetto-server-linux-x64.tar.gz\"
 
         # make sure binary is executable
         if [ -f \"\$track_dir/AssettoServer\" ]; then
