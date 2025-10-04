@@ -1,0 +1,1 @@
+A bash script to automate the installation and setup of self-hosted Assetto Corsa servers and a custom Discord bot to control your Asetto Server.
