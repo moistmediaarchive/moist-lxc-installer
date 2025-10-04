@@ -389,24 +389,24 @@ echo -e "${GREEN}[+] AssettoServer release downloaded.${RESET}"
 echo -e "${BLUE}[>] Copying and extracting AssettoServer into each track folder...${RESET}"
 
 pct exec $CTID -- bash -c "
+    ASSETTOSERVER_FILE='assetto-server-linux-x64.tar.gz'
     for track_dir in /home/$USERNAME/assetto-servers/*/; do
         [ -d \"\$track_dir\" ] || continue
-        cp /home/$USERNAME/assetto-servers/$ASSETTOSERVER_FILE \"\$track_dir\"
-        cd \"\$track_dir\"
 
-        # Extract as the correct user (not root!)
-        runuser -l $USERNAME -c \"tar --no-same-owner -xzf $ASSETTOSERVER_FILE\" || {
+        cp /home/$USERNAME/assetto-servers/\$ASSETTOSERVER_FILE \"\$track_dir\"
+
+        # Extract as the correct user in the track dir
+        runuser -l $USERNAME -c \"cd '\$track_dir' && tar --no-same-owner -xzf '\$ASSETTOSERVER_FILE'\" || {
             echo '[!] Failed to extract AssettoServer in' \"\$track_dir\"
             continue
         }
 
-        rm -f $ASSETTOSERVER_FILE
+        rm -f \"\$track_dir/\$ASSETTOSERVER_FILE\"
 
         if [ -f \"\$track_dir/AssettoServer\" ]; then
             chmod +x \"\$track_dir/AssettoServer\"
         fi
 
-        # Fix ownership
         chown -R $USERNAME:$USERNAME \"\$track_dir\"
         chmod -R u+rw \"\$track_dir\"
     done
